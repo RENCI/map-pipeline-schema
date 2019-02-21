@@ -1,6 +1,14 @@
 # tic-mapping-schema
 
-Create schema in the database
+## Create database
+
+```
+create database <db>;
+create user <user> with password '<pass>';
+grant all on database <db> to <user>;
+```
+
+## Create schema in the database
 
 ```
 stack build
