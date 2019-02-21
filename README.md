@@ -7,7 +7,7 @@ stack build
 ```
 
 ```
-stack exec tic-mapping-exe <user> <pass> <db> <inputFile>
+stack exec tic-mapping-schema-exe <user> <pass> <db> <inputFile>
 ```
 
 ```
