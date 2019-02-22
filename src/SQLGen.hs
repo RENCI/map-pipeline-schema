@@ -13,7 +13,7 @@ data SQLType = SQLVarchar | SQLBoolean | SQLInteger | SQLDate deriving (Eq, Show
 instance ToSQL SQLType where
     toSQL SQLVarchar = "varchar"
     toSQL SQLBoolean = "boolean"
-    toSQL SQLInteger = "integer"
+    toSQL SQLInteger = "bigint"
     toSQL SQLDate = "date"
 
 data SQLStatement = SQLCreate {
