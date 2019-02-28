@@ -30,5 +30,10 @@ main = do
                     sqls = map (\table ->
                             let tn = T.unpack (tableHeal (head table))
                                 cols = map (\i -> (T.unpack (fieldNameHEAL i), dataType i)) table in
-                                SQLCreate tn cols) tables in
+                                SQLCreate tn cols) tables ++
+                           [
+                             SQLCreate "reviewer_organization" [("reviewer", SQLVarchar), ("organization", SQLVarchar)],
+                             SQLCreate "name" [("table", SQLVarchar), ("column", SQLVarchar), ("index", SQLVarchar), ("id", SQLVarchar), ("description", SQLVarchar)]                
+                           ] in
                     execSQLs db user pass sqls
+   
