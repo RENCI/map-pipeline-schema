@@ -11,9 +11,9 @@ import qualified Data.Vector as V
 import Data.Text (Text)
 import qualified Data.Text as T
 import Data.List (groupBy)
-import SQLGen
+import PMD.SQLGen
 
-data RandomizationFeature = FirstName | LastName | Name | Id | Email | PhoneNumber | LongTitle | ShortTitle | None
+data RandomizationFeature = FirstName | LastName | Name | Id | Email | PhoneNumber | LongTitle | ShortTitle | None deriving (Eq, Show)
 
 data Item = Item {
     fieldNameHEAL :: !Text,
@@ -25,8 +25,8 @@ data Item = Item {
     lookupInformation :: !Text,
     algorithm :: !Text,
     key :: !Text,
-    primary :: !Bool,
-    foreign :: !Bool,
+    isPrimaryKey :: !Bool,
+    isForeignKey :: !Bool,
     foreignKeyTable :: !Text,
     cardinality :: !Text,
     tableHeal :: !Text,
@@ -54,15 +54,15 @@ instance FromField SQLType where
     parseField n = error ("cannot convert to SQLType " ++ unpack n)
 
 instance FromField RandomizationFeature where
-    parseField "firstname" = FirstName
-    parseField "lastname" = LastName
-    parseField "name" = Name
-    parseField "id" = Id
-    parseField "email" = Email
-    parseField "phonenumber" = PhoneNumber
-    parseField "shorttitle" = ShortTitle
-    parseField "longtitle" = LongTitle
-    parseField "" = None
+    parseField "firstname" = pure FirstName
+    parseField "lastname" = pure LastName
+    parseField "name" = pure Name
+    parseField "id" = pure Id
+    parseField "email" = pure Email
+    parseField "phonenumber" = pure PhoneNumber
+    parseField "shorttitle" = pure ShortTitle
+    parseField "longtitle" = pure LongTitle
+    parseField "" = pure None
 
 
 instance FromNamedRecord Item where
