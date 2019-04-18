@@ -1,4 +1,4 @@
-module SQLGen where
+module PMD.SQLGen where
 
 import Data.List (intercalate)
 import Database.PostgreSQL.Simple

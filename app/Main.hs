@@ -11,8 +11,8 @@ import qualified Data.Vector as V
 import Data.Text (Text)
 import qualified Data.Text as T
 import Data.List (groupBy)
-import SQLGen
-import HEALMapping
+import PMD.SQLGen
+import PMD.HEALMapping
 
 main :: IO ()
 main = do

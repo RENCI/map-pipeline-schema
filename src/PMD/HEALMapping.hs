@@ -1,6 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module HEALMapping where
+module PMD.HEALMapping where
 
 import Data.Csv
 import qualified Data.ByteString.Lazy as BSL
