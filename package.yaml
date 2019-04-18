@@ -41,7 +41,7 @@ executables:
     - -rtsopts
     - -with-rtsopts=-N
     dependencies:
-    - tic-mapping
+    - map-pipeline-schema
 
 tests:
   map-pipeline-test:
@@ -52,4 +52,4 @@ tests:
     - -rtsopts
     - -with-rtsopts=-N
     dependencies:
-    - tic-mapping
+    - map-pipeline-schema
