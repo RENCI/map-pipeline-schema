@@ -16,14 +16,14 @@ import PMD.HEALMapping
 
 main :: IO ()
 main = do
-    [user, pass, db, inputFile] <- getArgs
+    [inputFile, outputFile] <- getArgs
     putStrLn ("input: " ++ inputFile)
     -- putStrLn ("output: " ++ outputFile)
     withFile inputFile ReadMode $ \ h -> do
         contents <- BSL.hGetContents h
         case decodeByName contents of
             Left err -> putStrLn err
-            Right (header, rows) ->
+            Right (header, rows) -> do
                 let rowsL = V.toList rows
                     isSameTable a b = tableHeal a == tableHeal b
                     tables = groupBy isSameTable rowsL
@@ -34,6 +34,8 @@ main = do
                            [
                              SQLCreate "reviewer_organization" [("reviewer", SQLVarchar), ("organization", SQLVarchar)],
                              SQLCreate "name" [("table", SQLVarchar), ("column", SQLVarchar), ("index", SQLVarchar), ("id", SQLVarchar), ("description", SQLVarchar)]                
-                           ] in
-                    execSQLs db user pass sqls
+                           ]
+                withFile outputFile WriteMode $ \h ->
+                  mapM_ (hPutStrLn h . toSQL) sqls
+                
    

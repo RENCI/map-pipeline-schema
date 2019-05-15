@@ -25,7 +25,6 @@ dependencies:
 - bytestring
 - vector
 - text
-- postgresql-simple
 - containers
 - tagsoup
 
