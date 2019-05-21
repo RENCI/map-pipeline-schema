@@ -64,6 +64,7 @@ instance FromField RandomizationFeature where
     parseField "longtitle" = pure LongTitle
     parseField "index" = pure Index
     parseField "nat" = pure (Int 0 maxBound)
+    parseField "" = pure None
     parseField f = fail (unpack f)
 
 
