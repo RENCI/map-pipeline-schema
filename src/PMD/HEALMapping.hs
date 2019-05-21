@@ -13,7 +13,7 @@ import qualified Data.Text as T
 import Data.List (groupBy)
 import PMD.SQLGen
 
-data RandomizationFeature = FirstName | LastName | Name | Id | Email | PhoneNumber | LongTitle | ShortTitle | Index | Int | None deriving (Eq, Show)
+data RandomizationFeature = FirstName | LastName | Name | Id | Email | PhoneNumber | LongTitle | ShortTitle | Index | Int Int Int | None deriving (Eq, Show)
 
 data Item = Item {
     fieldNameHEAL :: !Text,
@@ -63,8 +63,7 @@ instance FromField RandomizationFeature where
     parseField "shorttitle" = pure ShortTitle
     parseField "longtitle" = pure LongTitle
     parseField "index" = pure Index
-    parseField "int" = pure Int
-    parseField "" = pure None
+    parseField "int" = pure (Int 0 maxBound)
     parseField f = fail (unpack f)
 
 
