@@ -36,6 +36,6 @@ main = do
                              SQLCreate "name" [("table", SQLVarchar), ("column", SQLVarchar), ("index", SQLVarchar), ("id", SQLVarchar), ("description", SQLVarchar)]                
                            ]
                 withFile outputFile WriteMode $ \h ->
-                  mapM_ (hPutStrLn h . toSQL) sqls
+                  mapM_ (hPutStrLn h . ( ++ ";") . toSQL) sqls
                 
    
