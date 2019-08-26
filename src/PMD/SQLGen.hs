@@ -14,7 +14,7 @@ instance ToSQL SQLType where
     toSQL SQLBoolean = "boolean"
     toSQL SQLInteger = "bigint"
     toSQL SQLDate = "date"
-    toSQL SQLFloat = "double"
+    toSQL SQLFloat = "real"
 
 data SQLStatement = SQLCreate {
     tableName :: String,
