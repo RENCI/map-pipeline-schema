@@ -13,7 +13,7 @@ import qualified Data.Text as T
 import Data.List (groupBy)
 import PMD.SQLGen
 
-data RandomizationFeature = FirstName | LastName | Name | Id | Email | PhoneNumber | LongTitle | ShortTitle | Index | Int Int Int | MONTHDASHYY | None deriving (Eq, Show)
+data RandomizationFeature = FirstName | LastName | Name | Id | Email | PhoneNumber | LongTitle | ShortTitle | Index | Int Int Int | Float | MONTHDASHYY | None deriving (Eq, Show)
 
 data Item = Item {
     fieldNameHEAL :: !Text,
@@ -48,6 +48,7 @@ instance FromField Bool where
 
 instance FromField SQLType where
     parseField "int" = pure SQLInteger
+    parseField "float" = pure SQLFloat
     parseField "boolean" = pure SQLBoolean
     parseField "date" = pure SQLDate
     parseField n | BS.take 4 n == "text" = pure SQLVarchar

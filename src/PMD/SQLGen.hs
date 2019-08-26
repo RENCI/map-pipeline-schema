@@ -7,13 +7,14 @@ import Data.String
 class ToSQL a where
     toSQL :: a -> String
 
-data SQLType = SQLVarchar | SQLBoolean | SQLInteger | SQLDate deriving (Eq, Show)
+data SQLType = SQLVarchar | SQLBoolean | SQLInteger | SQLDate | SQLFloat deriving (Eq, Show)
 
 instance ToSQL SQLType where
     toSQL SQLVarchar = "varchar"
     toSQL SQLBoolean = "boolean"
     toSQL SQLInteger = "bigint"
     toSQL SQLDate = "date"
+    toSQL SQLFloat = "double"
 
 data SQLStatement = SQLCreate {
     tableName :: String,
