@@ -2,13 +2,12 @@
 
 module PMD.HEALMapping where
 
-import Data.Csv
+import Data.Aeson
 import qualified Data.ByteString.Lazy as BSL
 import qualified Data.ByteString as BS
-import Data.ByteString.Char8 (unpack)
 import Data.Vector (Vector)
 import qualified Data.Vector as V
-import Data.Text (Text)
+import Data.Text (Text, unpack)
 import qualified Data.Text as T
 import Data.List (groupBy)
 import PMD.SQLGen
@@ -39,56 +38,61 @@ data Item = Item {
     comments :: !Text
 } deriving (Eq, Show)
 
-instance FromField Bool where
-    parseField "yes" = pure True
-    parseField "TRUE" = pure True
-    parseField "FALSE" = pure True
-    parseField "" = pure False
-    parseField n = error ("cannot convert to Bool " ++ unpack n)
+newtype BoolWrapper = BoolWrapper { getBool :: Bool }
 
-instance FromField SQLType where
-    parseField "int" = pure SQLInteger
-    parseField "float" = pure SQLFloat
-    parseField "boolean" = pure SQLBoolean
-    parseField "date" = pure SQLDate
-    parseField n | BS.take 4 n == "text" = pure SQLVarchar
-    parseField n = error ("cannot convert to SQLType " ++ unpack n)
+instance FromJSON BoolWrapper where
+    parseJSON = withText "bool" $ \t -> case t of
+      "yes" -> pure (BoolWrapper True)
+      "TRUE" -> pure (BoolWrapper True)
+      "FALSE" -> pure (BoolWrapper True)
+      "" -> pure (BoolWrapper False)
+      n -> fail ("cannot convert to Bool " ++ unpack n)
 
-instance FromField RandomizationFeature where
-    parseField "firstname" = pure FirstName
-    parseField "lastname" = pure LastName
-    parseField "name" = pure Name
-    parseField "id" = pure Id
-    parseField "email" = pure Email
-    parseField "phonenumber" = pure PhoneNumber
-    parseField "shorttitle" = pure ShortTitle
-    parseField "longtitle" = pure LongTitle
-    parseField "index" = pure Index
-    parseField "nat" = pure (Int 0 maxBound)
-    parseField "month-yy" = pure (MONTHDASHYY)
-    parseField "" = pure None
-    parseField f = fail (unpack f)
+instance FromJSON SQLType where
+    parseJSON = withText "sqltype" $ \t -> case t of
+      "int" -> return SQLInteger
+      "float" -> pure SQLFloat
+      "boolean" -> pure SQLBoolean
+      "date" -> pure SQLDate
+      n | T.take 4 n == "text" -> pure SQLVarchar
+      n -> fail ("cannot convert to SQLType " ++ unpack n)
+
+instance FromJSON RandomizationFeature where
+    parseJSON = withText "randomizationfeature" $ \t -> case t of
+      "firstname" -> pure FirstName
+      "lastname" -> pure LastName
+      "name" -> pure Name
+      "id" -> pure Id
+      "email" -> pure Email
+      "phonenumber" -> pure PhoneNumber
+      "shorttitle" -> pure ShortTitle
+      "longtitle" -> pure LongTitle
+      "index" -> pure Index
+      "nat" -> pure (Int 0 maxBound)
+      "month-yy" -> pure (MONTHDASHYY)
+      "" -> pure None
+      f -> fail (unpack f)
 
 
-instance FromNamedRecord Item where
-    parseNamedRecord m =
+instance FromJSON Item where
+    parseJSON = withObject "object" $ \m ->
         Item
-            <$> m .: "Fieldname_HEAL"
-            <*> m .: "Fieldname_phase1"
+            <$> m .: "Fieldname_CTMD"
+            <*> m .: "Fieldname_redcap"
             <*> m .: "Data Type"
             <*> m .: "Randomization_feature"
             <*> m .: "Dropdown Options"
-            <*> m .: "Lookup Needed"
+            <*> (getBool <$> m .: "Lookup Needed")
             <*> m .: "Lookup Information"
             <*> m .: "Algorithm"
             <*> m .: "Key"
-            <*> m .: "Primary"
-            <*> m .: "Foreign"
+            <*> (getBool <$> m .: "Primary")
+            <*> (getBool <$> m .: "Foreign")
             <*> m .: "FK_tablename"
-            <*> m .: "Cardinality (Table_HEAL--FK_tablename)"
-            <*> m .: "Table_HEAL"
+            <*> m .: "Cardinality (Table_CTMD--FK_tablename)"
+            <*> m .: "Table_CTMD"
             <*> m .: "Table_phase1"
-            <*> m .: "NOT NULL"
+            <*> (getBool <$> m .: "NOT NULL")
             <*> m .: "Default Value"
             <*> m .: "Field Status"
             <*> m .: "Instrument"

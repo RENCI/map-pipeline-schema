@@ -21,12 +21,11 @@ description:         Please see the README on GitHub at <https://github.com/gith
 
 dependencies:
 - base >= 4.7 && < 5
-- cassava
 - bytestring
 - vector
 - text
 - containers
-- tagsoup
+- aeson
 
 library:
   source-dirs: src
