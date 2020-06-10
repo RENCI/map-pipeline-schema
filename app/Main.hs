@@ -9,7 +9,7 @@ import Data.Vector (Vector)
 import qualified Data.Vector as V
 import Data.Text (Text)
 import qualified Data.Text as T
-import Data.List (groupBy)
+import Data.List (groupBy, sortOn)
 import Data.Aeson (eitherDecodeFileStrict)
 import PMD.SQLGen
 import PMD.HEALMapping
@@ -27,8 +27,11 @@ main = do
         exitWith (ExitFailure (-1))
       Right rowsL -> do
         let isSameTable a b = tableHeal a == tableHeal b
-            tables = groupBy isSameTable rowsL
-            sqls = map (\table ->
+            tables = groupBy isSameTable (sortOn tableHeal rowsL)
+        mapM (\table -> do
+                 putStrLn "===table==="
+                 mapM (\row -> putStrLn ("\t" ++ show row) ) table) tables    
+        let sqls = map (\table ->
                     let tn = T.unpack (tableHeal (head table))
                         cols = map (\i -> (T.unpack (fieldNameHEAL i), dataType i)) table in
                         SQLCreate tn cols) tables ++
