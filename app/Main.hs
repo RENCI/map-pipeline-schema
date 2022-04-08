@@ -18,14 +18,16 @@ import System.Exit (exitWith, ExitCode(ExitFailure))
 main :: IO ()
 main = do
     [inputFile, outputFile] <- getArgs
-    putStrLn ("input: " ++ inputFile)
+    -- putStrLn ("input: " ++ inputFile)
     -- putStrLn ("output: " ++ outputFile)
+    -- inputFile is mapping.json, outputFile is tables.sql
     contents <- eitherDecodeFileStrict inputFile
     case contents of
       Left err -> do
         putStrLn ("cannot decode json " ++ err)
         exitWith (ExitFailure (-1))
       Right rowsL -> do
+        -- tableHeal is defined in PMD.HEALMapping module
         let isSameTable a b = tableHeal a == tableHeal b
             tables = groupBy isSameTable (sortOn tableHeal rowsL)
         mapM (\table -> do
