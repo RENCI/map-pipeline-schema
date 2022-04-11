@@ -28,6 +28,8 @@ main = do
         exitWith (ExitFailure (-1))
       Right rowsL -> do
         -- tableHeal is defined in PMD.HEALMapping module
+        -- group all column mapping info for same table, then map them into columns for the table
+        -- and create SQL statement for creating the table
         let isSameTable a b = tableHeal a == tableHeal b
             tables = groupBy isSameTable (sortOn tableHeal rowsL)
         mapM (\table -> do
@@ -37,11 +39,10 @@ main = do
                     let tn = T.unpack (tableHeal (head table))
                         cols = map (\i -> (T.unpack (fieldNameHEAL i), (dataType i, nonNull i))) table in
                         SQLCreate tn cols) tables ++
+                        -- add creating two additional tables which are not included in mappings.json input file
                            [
                              SQLCreate "reviewer_organization" [("reviewer", (SQLVarchar, True)), ("organization", (SQLVarchar, True))],
                              SQLCreate "name" [("table", (SQLVarchar, True)), ("column", (SQLVarchar, True)), ("index", (SQLVarchar, True)), ("id", (SQLVarchar, True)), ("description", (SQLVarchar, True))]                
                            ]
         withFile outputFile WriteMode $ \h ->
                   mapM_ (hPutStrLn h . ( ++ ";") . toSQL) sqls
-                
-   
