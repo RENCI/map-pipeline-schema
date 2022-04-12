@@ -13,11 +13,13 @@ grant all on database <db> to <user>;
 ```
 stack build
 ```
-
+Run the following command in map-pipeline-schema directory.
 ```
-stack exec tic-mapping-schema-exe <user> <pass> <db> <inputFile>
+stack exec tic-mapping-name-exe <inputFile> <outputFile>
 ```
-
+where the <inputFile> is redcap data dictionary json file 
+and outputFile is tables.sql file. For example, run it 
+as follows:
 ```
-stack exec tic-mapping-name-exe <inputFile> <inputFile2> <outputFile>
+stack exec map-pipeline-schema-exe ../mapping.json ../data/tables.sql
 ```
