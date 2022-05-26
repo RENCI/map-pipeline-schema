@@ -37,12 +37,12 @@ main = do
                  mapM (\row -> putStrLn ("\t" ++ show row) ) table) tables    
         let sqls = map (\table ->
                     let tn = T.unpack (tableHeal (head table))
-                        cols = map (\i -> (T.unpack (fieldNameHEAL i), (dataType i, nonNull i))) table in
+                        cols = map (\i -> (T.unpack (fieldNameHEAL i), dataType i)) table in
                         SQLCreate tn cols) tables ++
                         -- add creating two additional tables which are not included in mappings.json input file
                            [
-                             SQLCreate "reviewer_organization" [("reviewer", (SQLVarchar, True)), ("organization", (SQLVarchar, True))],
-                             SQLCreate "name" [("table", (SQLVarchar, True)), ("column", (SQLVarchar, True)), ("index", (SQLVarchar, True)), ("id", (SQLVarchar, True)), ("description", (SQLVarchar, True))]                
+                             SQLCreate "reviewer_organization" [("reviewer", SQLVarchar), ("organization", SQLVarchar)],
+                             SQLCreate "name" [("table", SQLVarchar), ("column", SQLVarchar), ("index", SQLVarchar), ("id", SQLVarchar), ("description", SQLVarchar)]
                            ]
         withFile outputFile WriteMode $ \h ->
                   mapM_ (hPutStrLn h . ( ++ ";") . toSQL) sqls
