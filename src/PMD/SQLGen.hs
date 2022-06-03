@@ -26,7 +26,7 @@ instance ToSQL SQLType where
 -- define a data type SQLStatement
 data SQLStatement = SQLCreate {
     tableName :: String,
-    columns :: [(String, (SQLType, Bool))]
+    columns :: [(String, SQLType)]
 }
 
 -- define sqlQuote function
@@ -41,6 +41,4 @@ sqlQuote a = "\"" ++ a ++ "\""
 instance ToSQL SQLStatement where
     toSQL (SQLCreate tn cols) = 
         "create table " ++ sqlQuote tn ++ " (" ++ intercalate ", " (map (\col ->
-            sqlQuote (fst col) ++ " " ++ toSQL (fst (snd col)) ++ (if snd (snd col) then " not null" else "")) cols) ++ ")"
-
-
+            sqlQuote (fst col) ++ " " ++ toSQL (snd col)) cols) ++ ")"
