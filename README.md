@@ -15,7 +15,7 @@ stack build
 ```
 Run the following command in map-pipeline-schema directory.
 ```
-stack exec tic-mapping-name-exe <inputFile> <outputFile>
+stack exec map-pipeline-schema-exe <inputFile> <outputFile>
 ```
 where the <inputFile> is mappings json file which can be found 
 [here](https://github.com/RENCI/ctmd-dashboard/blob/master/mapping.json) 
